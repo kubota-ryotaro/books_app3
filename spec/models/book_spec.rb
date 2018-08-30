@@ -23,10 +23,8 @@ RSpec.describe Book, type: :model do
     end
 
     specify 'updateされたデータが意図通りに更新されているか.' do
-      rand1 = Book.order("RAND()").limit(1)
-      rand2 = Book.order("RAND()").limit(1)
-      rand = rand1 + rand2
-      rand_id = rand[0][:id]
+      sql = ('SELECT id FROM books')
+      rand_id = ActiveRecord::Base.connection.select_all(sql).to_hash.sample["id"]
       rand_book = Book.find(rand_id)
       rand_book.update( title: "update title", memo: "update memo" )
       result = Book.authenticate2(rand_id)
